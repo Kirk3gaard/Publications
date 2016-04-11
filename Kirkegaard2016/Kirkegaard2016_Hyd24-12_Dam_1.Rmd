@@ -1,7 +1,7 @@
 Genome extraction
 =======================================
 
-The html output of this binning process is available at [Figshare](http/doi.org/10.6084/m9.figshare.3168376) as I have had problems tracking down excactly the version of the Alphahull package I used.
+The html output of this binning process is available at [Figshare](http://doi.org/10.6084/m9.figshare.3168376) as I have had problems tracking down excactly the version of the Alphahull package I used.
 
 ##
 ```{r}
