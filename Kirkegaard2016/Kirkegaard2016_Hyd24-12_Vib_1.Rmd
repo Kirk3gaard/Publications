@@ -1,0 +1,173 @@
+---
+title: "Hyd24-12 - Viborg"
+author: "Rasmus Kirkegaard"
+date: "Saturday, August 9, 2014"
+output: html_document
+---
+
+## Introduction
+This report documents the binning of a Hyd24-12 genome from the full scale anaerobic digestion reactor at Viborg wastewater treatment plant (Vib_1). See [Kirkegaard et al 2016: "Genomic insights into members of the candidate phylum Hyd24-12 common in mesophilic anaerobic digesters"](https://doi.org/10.1038/ismej.2016.43) for further details.  
+
+The raw sequencing data is available in European Nucleotide Archive with BioProject ID: [PRJEB10929](http://www.ncbi.nlm.nih.gov/bioproject/?term=PRJEB10929).
+
+The genome sequence data have been submitted to DDBJ/EMBL/GenBank databases under accession numbers LKHB00000000, LKHC00000000 and LKHD00000000.
+
+## Load data and R packages
+In case you have not installed the [mmgenome package](http://madsalbertsen.github.io/mmgenome/), see the [Load data example](http://madsalbertsen.github.io/mmgenome/Load_data.html).
+
+```{r Loaddata, message=FALSE, warning=FALSE, results='hide'}
+library("mmgenome")
+mmimport("Load_data.Rmd")
+options(scipen = 8)
+```
+
+## Import data
+The Rmarkdown file [Load_data.Rmd]() describes the loading of the data and can be imported using the `mmimport` function. However, the preprocessed data can also be downloaded directly from figshare: [Kirkegaard2016_Vib.RData](https://dx.doi.org/10.6084/m9.figshare.3168229.v1). Hence, here we import the prepocessed data from figshare instead.
+```{r Load_data, message=FALSE, warning=FALSE, results='hide'}
+load("Kirkegaard2016_Vib.RData")
+```
+
+Print version numbers etc.
+```{r}
+sessionInfo()
+```
+
+## Initial extraction
+
+```{r zoomA, fig.width=12, fig.height=10, fig.align='center'}
+p <- mmplot(data = d, x = "V50AS", y = "V40AS", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(V50AS  =  c(9.13, 8.78, 58.3, 59.5),
+                  V40AS  =  c(99.4, 9.97, 10.2, 99.4))
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Viborg_subset1.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Extract the scaffolds in the selection.
+```{r extractA}
+dA <- mmextract(d, sel)
+
+#Look at the basic stats.
+mmstats(dA, ncov = 5)
+```
+
+Second extraction
+
+```{r zoom, fig.width=12, fig.height=10, fig.align='center'}
+p <- mmplot(data = dA, x = "V50AS", y = "V40AS", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(V50AS  =  c(12.2, 16.7, 18.2, 12.9),
+                  V40AS  =  c(12.9, 18.3, 15.2, 11))
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Viborg_subset2.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Extract the scaffolds in the selection.
+```{r extractB}
+dB <- mmextract(dA, sel)
+```
+
+Look at the basic stats.
+```{r}
+mmstats(dB, ncov = 5)
+```
+
+Look for variables that are suitable for subsetting further
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot_pairs(data = dB, variables = c("V40AS", "V40FOAM", "V50AS", "V50FOAM","gc","PC1","PC2","PC3"), point.size = 3, color = "phylum")
+```
+
+The two foam samples seem to be useful for another round of subsetting
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+p <- mmplot(data = dB, x = "V50FOAM", y = "V40FOAM", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(V50FOAM  =  c(22.7, 37.8, 37.9, 22.4),
+                  V40FOAM  =  c(3.47, 3.54, 1.67, 1.62))
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Viborg_subset3.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Extract the scaffolds in the selection.
+```{r}
+dC <- mmextract(dB, sel)
+
+#Look at the basic stats.
+
+mmstats(dC, ncov = 5)
+```
+
+Look for variables that are suitable for subsetting further
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot_pairs(data = dC, variables = c("V40AS", "V40FOAM", "V50AS", "V50FOAM","gc","PC1","PC2","PC3"), point.size = 3, color = "phylum")
+```
+
+GC seems to be useful for another round of subsetting
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+p <- mmplot(data = dC, x = "gc", y = "V40FOAM", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(gc  =  c(59.1, 59.1, 67.2, 67.1),
+                  V40FOAM  =  c(3.28, 1.73, 1.73, 3.28))
+
+mmplot_selection(p, sel)
+```
+
+Extract the scaffolds in the selection.
+```{r}
+dD <- mmextract(dC, sel)
+
+
+#Look at the basic stats.
+
+mmstats(dD, ncov = 5)
+```
+
+## Use paired end information to add contigs missed by the coverage criteria
+
+Make a network plot for the current bin using paired end connections
+
+```{r}
+mmplot_network(data = dD, network = pe, color = "gc", nconnections = 10)
+ggsave(filename="hyd24-12_Viborg_network1.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Use paired end information to pull in contigs connected to the current bin and plot the network again.
+
+```{r}
+dE <- mmextract_network(subset = dD, original = d, network = pe, nconnections = 10, type =  "direct")
+mmstats(dE, ncov = 4)
+
+mmplot_network(data = dE, network = pe, color = "V50FOAM", nconnections = 10, highlight = dC)
+ggsave(filename="hyd24-12_Viborg_network2.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+This seems to add a number of contigs that for some reason falls outside the coverage space of the original bin. We can now plot the bin in the context of the entire dataset.
+
+```{r}
+mmplot(data = d, x = "V50FOAM", y = "V40AS", log.x = T, log.y = T, color = "none", minlength = 3000, highlight = dE)
+ggsave(filename="hyd24-12_Viborg_subset_final.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+## Export the genome bin
+
+```{r}
+mmexport(data = dE,assembly = assembly,file = "Hyd24-12_Viborg.fa")
+```
