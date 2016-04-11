@@ -1,0 +1,155 @@
+---
+title: "Hyd24-12 - Randers"
+author: "Rasmus Kirkegaard"
+date: "Saturday, August 9, 2014"
+output: html_document
+---
+
+## Introduction
+This report documents the binning of a Hyd24-12 genome from the full scale anaerobic digestion reactor at Randers wastewater treatment plant (Ran_1). See [Kirkegaard et al 2016: "Genomic insights into members of the candidate phylum Hyd24-12 common in mesophilic anaerobic digesters"](https://doi.org/10.1038/ismej.2016.43) for further details.  
+
+The raw sequencing data is available in European Nucleotide Archive with BioProject ID: [PRJEB10929](http://www.ncbi.nlm.nih.gov/bioproject/?term=PRJEB10929).
+
+The genome sequence data have been submitted to DDBJ/EMBL/GenBank databases under accession numbers LKHB00000000, LKHC00000000 and LKHD00000000.
+
+## Load data and R packages
+In case you have not installed the [mmgenome package](http://madsalbertsen.github.io/mmgenome/), see the [Load data example](http://madsalbertsen.github.io/mmgenome/Load_data.html).
+
+```{r Loaddata, message=FALSE, warning=FALSE, results='hide'}
+library("mmgenome")
+mmimport("Load_data.Rmd")
+options(scipen = 8)
+```
+
+## Import data
+The Rmarkdown file [Load_data.Rmd]() describes the loading of the data and can be imported using the `mmimport` function. However, the preprocessed data can also be downloaded directly from figshare: [Kirkegaard2016_Ran.RData](https://figshare.com/s/f66d2db5a28845eb59bd). Hence, here we import the prepocessed data from figshare instead.
+```{r Load_data, message=FALSE, warning=FALSE, results='hide'}
+load("Kirkegaard2016_Ran.RData")
+```
+
+Print version numbers etc.
+```{r}
+sessionInfo()
+```
+
+## Initial extraction
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot(data = d, x = "R50AS", y = "R50FOAM", log.x = T, log.y = T, color = "none", minlength = 3000, highlight = 249)
+
+p <- mmplot(data = d, x = "R50AS", y = "R50FOAM", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(R50AS  =  c(7, 13, 13, 7),
+                  R50FOAM  =  c(40, 40, 25, 25))
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Randers_subset_1.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Extract the scaffolds in the selection.
+```{r extractA}
+dA <- mmextract(d, sel)
+```
+
+Look at the basic stats.
+```{r statsA}
+mmstats(dA, ncov = 5)
+```
+
+Look for variables suitable for further subsetting
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot_pairs(dA,variables = c("R50AS","R50FOAM","gc","PC1","PC2","PC3"))
+```
+
+PC2 and GC seem to be useful for a second round of subsetting
+
+```{r zoomA, fig.width=12, fig.height=10, fig.align='center'}
+p <- mmplot(data = dA, x = "PC2", y = "gc", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(PC2  =  c(0.0298, 0.0347, 0.179, 0.164),
+                  gc  =  c(66.6, 59.1, 59.5, 66.4))
+
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Randers_subset_2.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+
+Extract the scaffolds in the selection.
+```{r extractB}
+dB <- mmextract(dA, sel)
+```
+
+Look at the basic stats.
+```{r statsB}
+mmstats(dB, ncov = 5)
+```
+
+## Use paired end information to recruit contigs that fall outside the coverage criteria
+
+```{r plot_networkB, fig.align='center', fig.height=10, fig.width=12}
+mmplot_network(data = dB, network = pe, color = "R50AS", nconnections = 10)
+ggsave(filename="hyd24-12_Randers_network_1.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Use paired end connections to recruit contigs outside the coverage criteria
+
+```{r}
+dC <- mmextract_network(subset = dB, original = d, network = pe, nconnections = 10, type =  "direct")
+mmstats(dC, ncov = 5)
+
+mmplot_network(data = dC, network = pe, color = "R50AS", nconnections = 10)
+```
+
+This seems to add a number of contigs to the bin that would otherwise be missed, but is also likely to add contamination.
+
+```{r}
+p <- mmplot(data = dC, x = "R50AS", y = "R50FOAM", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+p
+```
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot_pairs(dC,variables = c("R50AS","R50FOAM","gc","PC1","PC2","PC3"))
+```
+
+```{r}
+p <- mmplot(data = dC, x = "gc", y = "R50FOAM", log.x = T, log.y = T, color = "phylum", minlength = 3000)
+
+#p
+#sel <- mmplot_locator(p)
+
+sel <- data.frame(gc  =  c(60.6, 65.9, 66, 60.5),
+                  R50FOAM  =  c(40.5, 41, 27.8, 27.4))
+
+
+mmplot_selection(p, sel)
+ggsave(filename="hyd24-12_Randers_subset_3.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+Extract the scaffolds in the selection.
+```{r extractD}
+dD <- mmextract(dC, sel)
+
+#Look at the basic stats.
+mmstats(dD, ncov = 5)
+```
+
+This seems to add a number of contigs that for some reason falls outside the coverage space of the original bin. We can now plot the bin in the context of the entire dataset.
+
+```{r, fig.width=12, fig.height=10, fig.align='center'}
+mmplot(data = d, x = "R50AS", y = "R50FOAM", log.x = T, log.y = T, color = "none", minlength = 1000, highlight = dD)
+ggsave(filename="hyd24-12_Randers_subset_final.pdf", plot=last_plot(), width=10, height=10, useDingbats=FALSE)
+```
+
+## Export the genome bin
+
+```{r}
+mmexport(data = dD,assembly = assembly,file = "Hyd24-12_Randers.fa")
+```

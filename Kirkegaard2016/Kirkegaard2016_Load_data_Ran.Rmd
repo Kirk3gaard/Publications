@@ -1,0 +1,58 @@
+---
+title: "Load Data"
+author: "Mads Albertsen"
+date: "Monday, August 4, 2014"
+output: html_document
+---
+
+## Load needed packages
+
+In case you havn't installed all the needed packages, they can be installed via e.g. `install_github("MadsAlbertsen/mmgenome/mmgenome")`.
+```{r Load_packages, message=F,warning=FALSE}
+library("mmgenome")
+options(scipen = 8)
+```
+
+## Load all data
+
+Load the raw data.
+```{r Load_data}
+assembly <- readDNAStringSet("data/assembly.fa", format = "fasta")
+
+R50AS <- read.csv("data/LIB-RHK-530-A-1_5 mapping.csv", header = T)[,c("Reference.sequence","Average.coverage")]               
+R50FOAM <- read.csv("data/LIB-RHK-531-A-1_1 mapping.csv", header = T)[,c("Reference.sequence","Average.coverage")]                 
+plot(R50AS$Average.coverage+0.01,R50FOAM$Average.coverage+0.01, log="xy")
+
+ess <- read.table("data/essential.txt", header = T)
+tax <- read.delim("data/tax.txt", header = T)
+
+pe <- read.delim("data/network.txt", header = T)
+#mp <- read.delim("data/network_mp.txt", header = T)
+
+rRNA16S <- read.delim("data/16S.csv", header = T,sep = ";")
+scaffold<-rep(0,times =dim(rRNA16S)[1] )
+for (i in 1:dim(rRNA16S)[1]) {
+  scaffold[i]<-unlist(strsplit(x = as.character(rRNA16S$sequence_identifier[i]),split = "[.]"))[1]
+}
+rRNA16S<-cbind(scaffold,rRNA16S)
+strsplit(x = as.character(rRNA16S$sequence_identifier[1]),split = "[.]")
+#pps <- read.table("data/pps.txt", sep = "\t", header = F, col.names = c("scaffold","pps_root", "pps_kingdom", "pps_phylum", "pps_class", "pps_order", "pps_family", "pps_genus", "pps_species"))[,c(1,4,5,6,7,8)]
+#pps[pps == ""] <- NA
+```
+
+All data is combined into a single dataframe `d`.
+```{r Merge_d1}
+d <- mmload(assembly = assembly, 
+           coverage = c("R50AS", "R50FOAM"), 
+           tax = tax,
+           essential = ess,
+           tax.expand = "Proteobacteria",
+           tax.freq = 50,
+           other = c("rRNA16S")#, "pps"
+           )
+```
+
+Remove temporary data.
+```{r remove}
+rm(list = c("R50AS", "R50FOAM", "ess", "tax", "rRNA16S"))
+```
