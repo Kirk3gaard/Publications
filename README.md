@@ -4,3 +4,4 @@
 * Data
   * The raw sequencing data is available in European Nucleotide Archive with BioProject ID: [PRJEB10929](http://www.ncbi.nlm.nih.gov/bioproject/?term=PRJEB10929).
   * The genome sequence data have been submitted to DDBJ/EMBL/GenBank databases under accession numbers LKHB00000000, LKHC00000000 and LKHD00000000.
+  * The .RData used for binning with the [mmgenome package](http://madsalbertsen.github.io/mmgenome/) is available at [figshare](https://figshare.com/authors/Rasmus_Kirkegaard/2604133) 
