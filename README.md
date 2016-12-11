@@ -7,3 +7,10 @@
   * The ".RData" files used for binning of genomes from metagenome sequencing data with the [mmgenome package](http://madsalbertsen.github.io/mmgenome/) is available at [figshare](https://figshare.com/authors/Rasmus_Kirkegaard/2604133): [Metagenomes from Randers](https://doi.org/10.6084/m9.figshare.3168220), [Metagenomes from Viborg](https://doi.org/10.6084/m9.figshare.3168229), [Metagenomes from Damhusaaen](https://doi.org/10.6084/m9.figshare.3168382).
   * RMarkdown files for reproducing the genome binning process are available at Github: [Kirkegaard et 2016](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2016)
   * The genome sequence data have been submitted to DDBJ/EMBL/GenBank databases under accession numbers [LKHB00000000](http://www.ncbi.nlm.nih.gov/nuccore/LKHB00000000), [LKHC00000000](http://www.ncbi.nlm.nih.gov/nuccore/LKHC00000000) and [LKHD00000000](http://www.ncbi.nlm.nih.gov/nuccore/LKHD00000000).
+
+[Kirkegaard et al 2016b: "To be announced"]()
+* Data availability
+  * The raw sequencing data is available at the European Nucleotide Archive with BioProject ID: [PRJEB15624](http://www.ncbi.nlm.nih.gov/bioproject/?term=PRJEB15624).
+  * The data processing is described in the [paper]()
+  * The ".RData" file is available at [figshare](https://dx.doi.org/10.6084/m9.figshare.4308191)
+  * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et 2016b](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2016b)
