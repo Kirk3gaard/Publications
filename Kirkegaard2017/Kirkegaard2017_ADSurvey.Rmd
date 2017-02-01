@@ -29,7 +29,7 @@ status<-try(load("data.RData"),silent = T)
  if(class(status)=="try-error") {
    rm(list = ls())
    print("Loading data from url")
-   status<-try(load(url("https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/7025558/data.RData")))
+   status<-try(load(url("https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/7448392/data.RData")))
     if(class(status)=="try-error") {
       rm(list = ls())
       print("Loading data from scratch")
