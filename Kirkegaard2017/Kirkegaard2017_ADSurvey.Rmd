@@ -606,8 +606,8 @@ newdata_lim<-newdata[which(newdata$maxabundance>0),c(3:14,2)] # Remove OTUs with
 Distributions of digester to influent abundance ratios for the three reactor types (Mesophilic, thermophlic and THP)
 ```{r fig.align="center", fig.height=7, fig.width=10}
 ggplot(ratiodf)+
-  geom_density(aes(x=RATIO,y=(..density..),weight=Frequency, colour = T_reactor))+
-  ylab(label = "Abundance weighted density")+
+  geom_line(aes(x=RATIO,y=(..density..),weight=Frequency, colour = T_reactor),size = 2, stat="density")+
+  ylab(label = "Density\n(weighted by abundance)")+
   scale_x_log10(breaks = c(0.1,1,10,100,1000))+
   theme(legend.title=element_blank(),legend.position = "bottom")
 # Save the figure
@@ -789,6 +789,68 @@ length(factor(mytable$Sample_location))
 ```
 
 ## Figure S8
+Distributions of digester to influent abundance ratios for for individual plants w. many samples
+
+```{r}
+plant<-"Viborg"
+plants<-c("Viborg","Fredericia","Aalborg_West","Bjergmarken","Ejby_Moelle")
+ratiodf_sel<-data.frame(RATIO=double(), res_RT.tag=character(), res_RT.Mean=double(), plant=character())
+for (plant in plants) {
+
+
+####
+# Digester
+###
+d_sel<- subset_samples(b_ads_s, Sample_location==plant)
+
+res<-data.frame("tag"=names(apply(otu_table(d_sel), 1, mean)),"Mean"=apply(otu_table(d_sel), 1, mean))
+
+res_RT<-res
+
+####
+# For influent
+###
+d_sel<- subset_samples(b_df, Sample_type=="Influent" & Sample_location==plant)
+
+res<-data.frame("tag"=names(apply(otu_table(d_sel), 1, mean)),"Mean"=apply(otu_table(d_sel), 1, mean))
+
+res_inf<-res
+####
+# Surplus sludge
+###
+d_sel<- subset_samples(b_df, simple_var3=="b) Surplus sludge" & Sample_location==plant)
+
+res<-data.frame("tag"=names(apply(otu_table(d_sel), 1, mean)),"Mean"=apply(otu_table(d_sel), 1, mean))
+
+res_AS<-res
+
+# Calculate ratio and plot
+options(scipen = 8)
+RATIO_inf<-res_RT$Mean/res_inf$Mean
+RATIO_AS<-res_RT$Mean/res_AS$Mean
+RATIO<-apply(cbind(RATIO_inf,RATIO_AS),1,min)
+
+mydf<-data.frame(RATIO,res_RT$tag,res_RT$Mean)
+
+
+# For creating a table of all the abundance values
+tempdf<-cbind(mydf,plant)
+tempdf$Frequency<-tempdf$res_RT.Mean/sum(tempdf$res_RT.Mean)
+ratiodf_sel<-rbind(ratiodf_sel,tempdf)
+}
+
+```
+
+```{r fig.width=10,fig.height=7,fig.align="center"}
+ggplot(ratiodf_sel)+
+  geom_line(aes(x=RATIO,y=(..density..),weight=Frequency, colour = plant),size = 2, stat="density")+
+  ylab(label = "Density\n(weighted by abundance)")+
+  scale_x_log10(breaks = c(0.1,1,10,100,1000))+
+  theme(legend.title=element_blank(),legend.position = "bottom")
+#ggsave(filename = "SurveyPaper/FigureS8.pdf",width = 10,height = 7, useDingbats = FALSE)
+```
+
+## Figure S9
 OTUs within Gelria are different between mesophilic and thermophilic! 
 
 ```{r fig.align="center",fig.height=7,fig.width=10}
@@ -806,6 +868,5 @@ new_labels <- toupper(sub(".*? ", "", original_labels))
 p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_labels)) 
 p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
-#ggsave(filename = "FigureS8.pdf",width = 10,height = 7, useDingbats = FALSE)
+#ggsave(filename = "FigureS9.pdf",width = 10,height = 7, useDingbats = FALSE)
 ```
-
