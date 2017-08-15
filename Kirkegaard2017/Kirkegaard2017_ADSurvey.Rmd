@@ -1,5 +1,5 @@
 ---
-title: "Identifying the abundant and active microorganisms common to full-scale anaerobic digesters"
+title: "The impact of immigration on microbial community composition in full-scale anaerobic digesters"
 author: "Rasmus Kirkegaard et al 2017"
 date: "`r format(Sys.time(), '%d-%m-%Y')`, Aalborg, Denmark"
 output: html_document
@@ -13,6 +13,8 @@ This project deals with the microbial analysis of full scale anaerobic digesters
 
 ```{r , message=FALSE, warning=FALSE, echo=T}
 library(knitr)
+#library("devtools")
+#install_github("MadsAlbertsen/ampvis")
 library(ampvis)
 library(cowplot)
 library(plyr)
@@ -46,60 +48,44 @@ Print sessioninfo for reproducibility as R and package versions are known to mak
 sessionInfo()
 ```
 **This was tested and working with:**
-
-R version 3.3.2 (2016-10-31)
+R version 3.4.0 (2017-04-21)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 14393)
+Running under: Windows >= 8 x64 (build 9200)
+
+Matrix products: default
 
 locale:
-[1] LC_COLLATE=Danish_Denmark.1252  LC_CTYPE=Danish_Denmark.1252   
-[3] LC_MONETARY=Danish_Denmark.1252 LC_NUMERIC=C                   
-[5] LC_TIME=Danish_Denmark.1252    
+[1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252
+[4] LC_NUMERIC=C                            LC_TIME=English_United Kingdom.1252    
 
 attached base packages:
- [1] stats4    parallel  grid      stats     graphics  grDevices utils    
- [8] datasets  methods   base     
+ [1] stats4    parallel  grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] plotly_4.5.6               plyr_1.8.4                
- [3] cowplot_0.7.0              ampvis_1.27.0             
- [5] scales_0.4.1               gridExtra_2.2.1           
- [7] magrittr_1.5               dplyr_0.5.0               
- [9] stringr_1.1.0              ggdendro_0.1-20           
-[11] DESeq2_1.14.1              SummarizedExperiment_1.4.0
-[13] Biobase_2.34.0             GenomicRanges_1.26.2      
-[15] GenomeInfoDb_1.10.2        data.table_1.10.0         
-[17] Biostrings_2.42.1          XVector_0.14.0            
-[19] IRanges_2.8.1              S4Vectors_0.12.1          
-[21] BiocGenerics_0.20.0        RColorBrewer_1.1-2        
-[23] igraph_1.0.1               vegan_2.4-2               
-[25] lattice_0.20-34            permute_0.9-4             
-[27] phyloseq_1.19.1            reshape2_1.4.2            
-[29] ggrepel_0.6.5              ggplot2_2.2.1             
-[31] knitr_1.15.1              
+ [1] plotly_4.7.0               plyr_1.8.4                 cowplot_0.7.0              ampvis_1.27.0              scales_0.4.1              
+ [6] gridExtra_2.2.1            magrittr_1.5               dplyr_0.7.2                stringr_1.2.0              ggdendro_0.1-20           
+[11] DESeq2_1.16.1              SummarizedExperiment_1.6.3 DelayedArray_0.2.7         matrixStats_0.52.2         Biobase_2.36.2            
+[16] GenomicRanges_1.28.3       GenomeInfoDb_1.12.2        data.table_1.10.4          Biostrings_2.44.2          XVector_0.16.0            
+[21] IRanges_2.10.2             S4Vectors_0.14.3           BiocGenerics_0.22.0        RColorBrewer_1.1-2         igraph_1.1.2              
+[26] vegan_2.4-3                lattice_0.20-35            permute_0.9-4              phyloseq_1.20.0            reshape2_1.4.2            
+[31] ggrepel_0.6.5              ggplot2_2.2.1              knitr_1.16                 devtools_1.13.2           
 
 loaded via a namespace (and not attached):
- [1] httr_1.2.1           tidyr_0.6.1          viridisLite_0.1.3   
- [4] jsonlite_1.2         splines_3.3.2        foreach_1.4.3       
- [7] Formula_1.2-1        assertthat_0.1       latticeExtra_0.6-28 
-[10] yaml_2.1.14          RSQLite_1.1-2        backports_1.0.5     
-[13] digest_0.6.11        checkmate_1.8.2      colorspace_1.3-2    
-[16] htmltools_0.3.5      Matrix_1.2-7.1       XML_3.98-1.5        
-[19] genefilter_1.56.0    zlibbioc_1.20.0      purrr_0.2.2         
-[22] xtable_1.8-2         BiocParallel_1.8.1   htmlTable_1.8       
-[25] tibble_1.2           annotate_1.52.1      mgcv_1.8-15         
-[28] nnet_7.3-12          lazyeval_0.2.0       survival_2.40-1     
-[31] memoise_1.0.0        evaluate_0.10        nlme_3.1-128        
-[34] MASS_7.3-45          foreign_0.8-67       tools_3.3.2         
-[37] munsell_0.4.3        locfit_1.5-9.1       cluster_2.0.5       
-[40] AnnotationDbi_1.36.1 ade4_1.7-5           rhdf5_2.18.0        
-[43] RCurl_1.95-4.8       iterators_1.0.8      biomformat_1.2.0    
-[46] htmlwidgets_0.8      bitops_1.0-6         base64enc_0.1-3     
-[49] rmarkdown_1.3        gtable_0.2.0         codetools_0.2-15    
-[52] multtest_2.30.0      DBI_0.5-1            R6_2.2.0            
-[55] Hmisc_4.0-2          rprojroot_1.2        ape_4.0             
-[58] stringi_1.1.2        Rcpp_0.12.9          geneplotter_1.52.0  
-[61] rpart_4.1-10         acepack_1.4.1
+ [1] nlme_3.1-131            bitops_1.0-6            httr_1.2.1              tools_3.4.0             backports_1.1.0        
+ [6] R6_2.2.2                rpart_4.1-11            Hmisc_4.0-3             DBI_0.7                 lazyeval_0.2.0         
+[11] mgcv_1.8-17             colorspace_1.3-2        ade4_1.7-6              nnet_7.3-12             withr_1.0.2            
+[16] curl_2.6                compiler_3.4.0          git2r_0.18.0            htmlTable_1.9           checkmate_1.8.2        
+[21] genefilter_1.58.1       digest_0.6.12           foreign_0.8-67          base64enc_0.1-3         pkgconfig_2.0.1        
+[26] htmltools_0.3.6         htmlwidgets_0.8         rlang_0.1.1             RSQLite_1.1-2           bindr_0.1              
+[31] jsonlite_1.5            BiocParallel_1.10.1     acepack_1.4.1           RCurl_1.95-4.8          GenomeInfoDbData_0.99.0
+[36] Formula_1.2-1           biomformat_1.4.0        Matrix_1.2-9            Rcpp_0.12.11            munsell_0.4.3          
+[41] ape_4.1                 stringi_1.1.5           MASS_7.3-47             zlibbioc_1.22.0         rhdf5_2.20.0           
+[46] splines_3.4.0           multtest_2.32.0         annotate_1.54.0         locfit_1.5-9.1          geneplotter_1.54.0     
+[51] codetools_0.2-15        XML_3.98-1.8            glue_1.1.0              latticeExtra_0.6-28     foreach_1.4.3          
+[56] tidyr_0.6.3             purrr_0.2.2.2           gtable_0.2.0            assertthat_0.2.0        xtable_1.8-2           
+[61] viridisLite_0.2.0       survival_2.41-3         tibble_1.3.3            iterators_1.0.8         AnnotationDbi_1.38.1   
+[66] memoise_1.1.0           bindrcpp_0.2            cluster_2.0.6         
+
 
 # Analyse the microbial data
 
@@ -109,19 +95,19 @@ loaded via a namespace (and not attached):
 ### Subset and filtering
 The principle behind ampvis is that you first subset the data to what you want to look at using `phyloseq` and then visualise it using `ampvis`. Samples can be subset based on any available metadata. See the [phyloseq guide](http://joey711.github.io/phyloseq/tutorials-index) for more examples.
 
-```{r see_variables, eval=F}
+```{r warning=FALSE, eval=F}
 sample_variables(b_d)
 ```
 
 Before we analyse the data it is often convenient to remove low abundant OTUs, as they are too noisy to result in meaningful conclusions. This can be done using the `filter_taxa` phyloseq function. Here we keep OTUs with an abundance of 0.1 % or more in at least one sample.
 
-```{r}
+```{r warning=FALSE}
 b_transformed<-transform_sample_counts(b_d, function(x) x / sum(x) * 100)
 b_df <- filter_taxa(b_transformed, function(x) max(x) >= 0.1, TRUE)
-remove(b_transformed,b_d)
+remove(b_transformed)
 ```
 
-```{r}
+```{r warning=FALSE}
 foamsamples<-c("SA-RHK-527",
                "SA-RHK-529",
                "SA-RHK-531",
@@ -138,7 +124,7 @@ foamsamples<-c("SA-RHK-527",
                )
 ```
 
-```{r echo=F}
+```{r warning=FALSE, echo=F}
 # Add a new set of variables
 # Make a variable
 sample_data(b_df)$simple_var<-"empty"
@@ -189,25 +175,25 @@ sample_data(b_df)$Foamevent[which(get_variable(b_df, "SA_ID") %in% foamsamples)]
 Here we will use subset to select samples by variables in the metadata and store the data in the object b_ads.
 
 
-```{r}
+```{r warning=FALSE}
 listof_ads<-c("Aalborg_West","Viborg","Fredericia","Damhusaaen","Randers","Herning","Fornaes","Aalborg_East","Aaby","Hjoerring","Soeholt","Slagelse","Ejby_Moelle","Bjergmarken","Lundtofte","Hobro","Avedoere","Naestved","Ringkoebing", "Esbjerg_West")
 ```
 
 
-```{r}
+```{r warning=FALSE}
 b_ads<- subset_samples(b_df, Sample_location %in% listof_ads & Temperature %in% c("THP","Mesophilic","Thermophilic") & !(Project_name %in% c("DNAextraction_optimisation_from_biogas","VTU_Case_study_-_GasMixCase_Viborg")))
 ```
 
 Lets have a look at the data
 
-```{r, fig.height=8,fig.width=8,fig.align="center"}
+```{r warning=FALSE, fig.height=8,fig.width=8,fig.align="center"}
 amp_ordinate(data = b_ads)+theme_cowplot()+
   theme(plot.margin = unit(c(0,0,0,0), "mm"))
 ```
 
 Let us add some information to see if we can see any patterns
 
-```{r, fig.height=10,fig.width=12,fig.align="center"}
+```{r warning=FALSE, fig.height=10,fig.width=12,fig.align="center"}
 amp_ordinate(data = b_ads,
              #plot.label = "SEQ_ID",
              plot.color = "Temperature",
@@ -224,9 +210,7 @@ There seems to be somewhat defined microbial communities with regard to the proc
 
 It thus seems fair to remove these and samples like it for now.
 
-```{r}
-
-
+```{r warning=FALSE}
 skiplist<-c(foamsamples,"SA-RHK-921", "SA-RHK-1028","SA-RHK-1065","SA-RHK-1311","SA-RHK-19","SA-RHK-212")
 #"SA-RHK-1028" (Sample from aaby 2011, where the plant was actually run with a mesophilic process)
 #"SA-RHK-1065" (Sample from aaby 2011, where the plant was actually run with a mesophilic process)
@@ -240,24 +224,24 @@ b_ads_s<- subset_samples(b_ads, !(SA_ID %in% skiplist) & !(Sample_location=="Her
 
 ## Archaea
 
-```{r}
+```{r warning=FALSE}
 a_df <- filter_taxa(a_d, function(x) max(x) >= 0.1, TRUE)
 ```
 
 
-```{r}
+```{r warning=FALSE}
 a_ads<- subset_samples(a_df, Sample_location %in% listof_ads & Temperature %in% c("THP","Mesophilic","Thermophilic") & !(Project_name %in% c("DNAextraction optimisation from biogas","VTU Case study - GasMixCase Viborg")))
 ```
 
-```{r , fig.height=10,fig.width=12, echo=F,fig.align="center"}
-# amp_ordinate(data = a_ads,
-#              plot.color = "Temperature"
-#              )+theme_cowplot()
+```{r warning=FALSE , fig.height=10,fig.width=12, echo=F,fig.align="center"}
+ amp_ordinate(data = a_ads,
+              plot.color = "Temperature"
+              )+theme_cowplot()
 ```
 
 The Archaea shows a clear cut between thermophilic reactors and mesophilic reactors (The THP reactors do also have a mesophilic process). Removing the samples that were identified to be wrongly classified before will make this trend even clearer.
 
-```{r}
+```{r warning=FALSE}
 a_ads_s<- subset_samples(a_ads, !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ"))
 ```
 
@@ -275,7 +259,7 @@ d. Thermophilic bacteria cluster by plant?
 
 ### Figure 1a
 
-```{r,fig.align="center"}
+```{r warning=FALSE ,fig.align="center"}
 p1_a<-amp_ordinate(data = a_ads_s,
              plot.color = "Temperature",
              plot.group.label = "Temperature",
@@ -286,7 +270,7 @@ p1_a<-amp_ordinate(data = a_ads_s,
 
 ### Figure 1b
 
-```{r}
+```{r warning=FALSE}
 p1_b<-amp_ordinate(data = b_ads_s,
              plot.color = "Temperature",
              plot.group.label = "Temperature",
@@ -301,7 +285,7 @@ p1_b<-amp_ordinate(data = b_ads_s,
 
 How do the samples group within the Mesophilic cluster?
 
-```{r, fig.height=10,fig.width=12, echo=F,fig.align="center"}
+```{r warning=FALSE, fig.height=10,fig.width=12, echo=F,fig.align="center"}
 b_ads_sM<- subset_samples(b_ads_s, Temperature=="Mesophilic" & Project_name!="VTU Case study - GasMixCase Viborg") # The Gasmix case is removed to avoid the main difference to be between Viborg and other plants due to uneven sample number.
 p1_c<-amp_ordinate(data = b_ads_sM,
              plot.color = "Sample_location",
@@ -315,7 +299,7 @@ p1_c<-amp_ordinate(data = b_ads_sM,
 
 How do the samples group within the Thermophilic cluster?
 
-```{r, fig.height=10,fig.width=12, echo=F,fig.align="center"}
+```{r warning=FALSE, fig.height=10,fig.width=12, echo=F,fig.align="center"}
 b_ads_sT<- subset_samples(b_ads_s, Temperature=="Thermophilic")
 p1_d<-amp_ordinate(data = b_ads_sT,
              plot.color = "Sample_location",
@@ -327,12 +311,14 @@ p1_d<-amp_ordinate(data = b_ads_sT,
 
 ### Figure 1 combined
 
-```{r,fig.align="center",fig.height=10,fig.width=10}
+```{r warning=FALSE ,fig.align="center",fig.height=10,fig.width=10}
 p1_am<-p1_a+ggtitle("Archaea")
 p1_bm<-p1_b+ggtitle("Bacteria")
 p1_cm<-p1_c+ggtitle("Bacteria - Mesophilic")
 p1_dm<-p1_d+ggtitle("Bacteria - Thermophilic")
 plot_grid(p1_am, p1_bm, p1_cm, p1_dm, align='vh',ncol = 2, labels=c('A', 'B', 'C', 'D'))
+
+# Save the figure
 #ggsave(filename = "Figure1.pdf",width = 10,height = 10, useDingbats = FALSE)
 ```
 ## Figure 2
@@ -345,7 +331,7 @@ b. Genus level heatmap for Archaea
 
 Phylum level heatmap for archaea
 
-```{r ,fig.align="center",fig.height=3,fig.width=15}
+```{r warning=FALSE ,fig.align="center",fig.height=3,fig.width=15}
 p2_a<-amp_heatmap(a_ads_s,tax.aggregate = "Phylum",tax.show = 5,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -363,7 +349,7 @@ p2_a<-p2_a+aes(x=p2_a$data$Group.label)+theme(axis.title.x=element_blank())
 ### Figure 2b
 
 Genus level heatmap for Archaea
-```{r,fig.align="center",fig.width=15}
+```{r warning=FALSE,fig.align="center",fig.width=15}
 p_temp<-amp_heatmap(a_ads_s,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -380,17 +366,11 @@ p2_b<-p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
 ### Figure 2 combined
 
-```{r ,fig.align="center",fig.width=18, fig.height=13}
+```{r warning=FALSE,fig.align="center",fig.width=18, fig.height=13}
 plot_grid(p2_a, p2_b, align='vh',ncol = 1, labels=c('A', 'B'),rel_heights = c(4,9))
+
+# Save the figure
 #ggsave(filename = "Figure2.pdf",width = 18,height = 13, useDingbats = FALSE)
-```
-
-
-Get stats about the number of samples pr plant
-
-```{r}
-mytable<-sample_data(a_ads_s)
-summary(mytable$Sample_location)
 ```
 
 
@@ -404,7 +384,7 @@ b. Genus level heatmap for bacteria
 
 Phylum level heatmap for bacteria
 
-```{r,fig.align="center",fig.width=15}
+```{r warning=FALSE,fig.align="center",fig.width=15}
 p3_a<-amp_heatmap(b_ads_s,tax.aggregate = "Phylum",tax.show = 20,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -422,7 +402,7 @@ p3_a<-p3_a+aes(x=p3_a$data$Group.label)+theme(axis.title.x=element_blank())
 ### Figure 3b
 Heatmap of top 20 genera in anaerobic digesters
 
-```{r,fig.align="center",fig.height=9,fig.width=15}
+```{r warning=FALSE,fig.align="center",fig.height=9,fig.width=15}
 p3_b<-amp_heatmap(b_ads_s,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -439,28 +419,22 @@ p3_b<-p3_b+aes(x=p3_b$data$Group.label)+theme(axis.title.x=element_blank())
 
 ### Figure 3 combined
 
-```{r ,fig.align="center",fig.width=18, fig.height=13}
+```{r warning=FALSE,fig.align="center",fig.width=18, fig.height=13}
 plot_grid(p3_a, p3_b, align='vh',ncol = 1, labels=c('A', 'B'),rel_heights = c(1,1))
+
+# Save the figure
 #ggsave(filename = "Figure3.pdf",width = 18,height = 13, useDingbats = FALSE)
 ```
 
-Get stats about the number of samples pr plant
-
-```{r}
-mytable<-sample_data(b_ads_s)
-summary(mytable$Sample_location)
-```
 ## Figure 4
 Panel figure with 2 heatmaps. 
 
 a. Genus level heatmap for bacteria sorted by abundance in influent streams
 b. Genus level heatmap for bacteria sorted by abundance in digesters
 
-```{r,fig.align="center",fig.height=13,fig.width=7}
+```{r warning=FALSE,fig.align="center",fig.height=7,fig.width=13}
 n_taxa<-20
 b_ads_sFig5_sel<- subset_samples(b_df, !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ")  & !(SEQ_ID %in% skiplist2) & order_type!="empty" & simple_var3!="empty" & Sample_type!="Effluent" & !(Dataset=="CJH" & Temperature=="THP"))
-
-
 
 # Sorted by influent abundance
 b_ads_sFig5_sel_sort<- subset_samples(b_df, !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ") &  !(SEQ_ID %in% skiplist2) & order_type %in% c("1_primary","2_surplus") & !(Dataset=="CJH" & Temperature=="THP"))
@@ -497,25 +471,16 @@ p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_label
 p5_b<-p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank(),legend.position="none",axis.text.x = element_text(vjust=0.5,color = "black"))
 
 
-plot_grid(p5_a, p5_b, align='vh',ncol = 1, labels=c('A', 'B'))
-fname<-paste0("Figure4.pdf")
+plot_grid(p5_a, p5_b, align='vh',ncol = 2, labels=c('A', 'B'))
 
-#ggsave(filename = fname,width = 7,height = 13, useDingbats = FALSE)
+# Save the figure
+# fname<-paste0("Figure4.pdf")
+#ggsave(filename = fname,width = 13,height = 7, useDingbats = FALSE)
 ```
 
-Get stats about the number of samples per sample type
+Calculate ratios
 
-```{r}
-mytable<-sample_data(b_ads_sFig5_sel)
-summary(factor(mytable$simple_var3))
-```
-
-
-## Figure 5
-Digester abundance for the OTUs versus the ratio between the abundance in the digester compared to the abundance in the influent streams (primary and surplus sludge)
-
- Abundance data for ratios OTU level
-```{r}
+```{r warning=FALSE}
 reactors<-c("Mesophilic","Thermophilic","THP")
 ratiodf<-data.frame(RATIO=double(), res_RT.tag=character(), res_RT.Mean=double(), T_reactor=character())
 ratiodf_h<-data.frame(init=1337)
@@ -565,31 +530,7 @@ ratiodf_h<-cbind(ratiodf_h,mydf)
 ```
 
 
-```{r fig.align="center", fig.height=10,fig.width=10}
-ratiodf_lim<-ratiodf[which(ratiodf$res_RT.Mean>2),]
-ratiodf_lim<-ratiodf_lim[order(ratiodf_lim$res_RT.Mean,decreasing = T),]
-p<-ggplot(ratiodf_lim, aes(x = RATIO, y = res_RT.Mean, colour=T_reactor))+
-  geom_point()+scale_x_log10(breaks=c(0.01,10,10000),labels = c(0.01,10,10000))+geom_vline(xintercept=1,linetype = "longdash", colour = "grey")+ylab("Mean abundance in AD")+geom_text_repel(aes(x = ratiodf_lim$RATIO,
-                      y = ratiodf_lim$res_RT.Mean,
-                      label = ratiodf_lim$res_RT.tag)) 
-p+geom_point(data=ratiodf,aes(x = RATIO, y = res_RT.Mean))+guides(colour = guide_legend(title = "Reactor type",override.aes = list(size = 3)))+theme(legend.key=element_rect(fill=NA),legend.position="bottom")
-fname<-paste0("Figure5.pdf")
-#ggsave(filename = fname,width = 10,height = 10, useDingbats = FALSE)
-
-
-seltax<-taxinfo[which(rownames(taxinfo)%in%unique(ratiodf_lim$res_RT.tag)),]
-tempnames<-rownames(seltax)
-seltax <- lapply(seltax, function(x) {gsub("p__", "", x)})
-seltax <- lapply(seltax, function(x) {gsub("c__", "", x)})
-seltax <- lapply(seltax, function(x) {gsub("o__", "", x)})
-seltax <- lapply(seltax, function(x) {gsub("f__", "", x)})
-seltax<-as.data.frame(seltax,row.names = tempnames)
-grid.arrange(
-tableGrob(seltax[as.character(unique(ratiodf_lim$res_RT.tag)),c("Phylum","Class","Order","Family","Genus")])
-)
-#pdf(file = "Figure5_OTUlabels.pdf",width = 10, height = 5.5)#10*10
-#grid.table(seltax[as.character(unique(ratiodf_lim$res_RT.tag)),c("Phylum","Class","Order","Family","Genus")])
-#dev.off()
+```{r warning=FALSE, fig.align="center", fig.height=10,fig.width=10}
 ratiodf_h<-ratiodf_h[,c(3,2,5,8,4,7,10)]
 colnames(ratiodf_h)<-c("OTU",paste0("RATIO.",reactors),paste0("Meanabundance.",reactors))
 rownames(ratiodf_h)<-ratiodf_h$OTU
@@ -599,27 +540,29 @@ maxratio<-apply(X = finalfram[,c("RATIO.Mesophilic","RATIO.Thermophilic","RATIO.
 finalframe<-cbind(finalfram,maxabundance,maxratio)            # Combine 
 newdata <- finalframe[order(maxabundance,decreasing = T),]    # Order the OTUs by abundance
 newdata_lim<-newdata[which(newdata$maxabundance>0),c(3:14,2)] # Remove OTUs with an abundance of 0 and select which columns to save
+
+# Save data
 #write.csv(newdata_lim,file = "tableS2.csv",row.names = F)
 ```
 
-## Figure 6
+## Figure 5
 Distributions of digester to influent abundance ratios for the three reactor types (Mesophilic, thermophlic and THP)
-```{r fig.align="center", fig.height=7, fig.width=10}
+```{r warning=FALSE, fig.align="center", fig.height=7, fig.width=10}
 ggplot(ratiodf)+
   geom_line(aes(x=RATIO,y=(..density..),weight=Frequency, colour = T_reactor),size = 2, stat="density")+
   ylab(label = "Density\n(weighted by abundance)")+
   scale_x_log10(breaks = c(0.1,1,10,100,1000))+
   theme(legend.title=element_blank(),legend.position = "bottom")
-# Save the figure
-#ggsave(filename = "Figure6.pdf",width = 10,height = 7, useDingbats = FALSE)
-```
 
+# Save the figure
+#ggsave(filename = "Figure5.pdf",width = 10,height = 7, useDingbats = FALSE)
+```
 
 # Supplementary figures
 
 ## Figure S1
 OTU level heatmap for Archaea
-```{r,fig.align="center",fig.width=18,fig.height=9}
+```{r warning=FALSE,fig.align="center",fig.width=18,fig.height=9}
 p_temp<-amp_heatmap(a_ads_s,tax.aggregate = "OTU",tax.add = c("Phylum","Genus"),tax.empty = "OTU",tax.show = 20,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -638,8 +581,42 @@ p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 ```
 
 ## Figure S2
+Diversity indeces plots
+
+```{r warning=FALSE}
+# Bacteria
+b_ads_unfiltered<- subset_samples(b_d, Sample_location %in% listof_ads & Temperature %in% c("THP","Mesophilic","Thermophilic") & !(Project_name %in% c("DNAextraction_optimisation_from_biogas","VTU_Case_study_-_GasMixCase_Viborg")) & !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ") & !(SEQ_ID %in% skiplist2) & !(Dataset=="CJH" & Temperature=="THP"))
+
+# Archaea
+a_ads_unfiltered<-subset_samples(a_d, Sample_location %in% listof_ads & Temperature %in% c("THP","Mesophilic","Thermophilic") & !(Project_name %in% c("DNAextraction optimisation from biogas","VTU Case study - GasMixCase Viborg")) & !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ"))
+```
+
+
+```{r warning=FALSE ,fig.align="center",fig.width=10,fig.height=10}
+# plots
+pS2_a<-plot_richness(b_ads_unfiltered, x="Temperature", measures=c("Shannon"))+xlab("Reactor type")+ylim(c(0,7))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+pS2_b<-plot_richness(a_ads_unfiltered, x="Temperature", measures=c("Shannon"))+xlab("Reactor type")+ylim(c(0,7))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+pS2_c<-plot_richness(b_ads_unfiltered, x="Temperature", measures=c("Simpson"))+xlab("Reactor type")+ylim(c(0,1))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+pS2_d<-plot_richness(a_ads_unfiltered, x="Temperature", measures=c("Simpson"))+xlab("Reactor type")+ylim(c(0,1))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+pS2_a<-pS2_a+ggtitle("Bacteria")
+pS2_b<-pS2_b+ggtitle("Archaea")
+pS2_c<-pS2_c+ggtitle("Bacteria")
+pS2_d<-pS2_d+ggtitle("Archaea")
+
+plot_grid(pS2_a, pS2_b, pS2_c, pS2_d, align='vh',ncol = 2, labels=c('A', 'B', 'C','D'))
+
+# Save figure
+#ggsave(filename = "FigureS2.pdf",width = 10,height = 10, useDingbats = FALSE)
+```
+
+
+## Figure S3
 OTU level heatmap for Bacteria
-```{r,fig.align="center",fig.width=18,fig.height=9}
+```{r warning=FALSE ,fig.align="center",fig.width=18,fig.height=9}
 p_temp<-amp_heatmap(b_ads_s,tax.aggregate = "OTU",tax.add = c("Phylum","Genus"),tax.empty = "empty",tax.show = 20,group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
   facet_grid(~ Temperature,scales="free_x",space="free")+
   theme(plot.margin = unit(c(0,0,0,0), "mm"),
@@ -654,13 +631,13 @@ p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_label
 p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
 # Save figure
-#ggsave(filename = "FigureS2.pdf",width = 18,height = 9, useDingbats = FALSE)
+#ggsave(filename = "FigureS3.pdf",width = 18,height = 9, useDingbats = FALSE)
 ```
 
-## Figure S3
+## Figure S4
 Heatmap with classification of OTUs based on their ratios
 
-```{r fig.align="center",fig.width=20,fig.height=45}
+```{r warning=FALSE, fig.align="center",fig.width=20,fig.height=45}
 newdata$RATIOGROUP<-"empty"
 newdata$RATIOGROUP[which(newdata$maxratio>1)]<-"VAR" # 1
 newdata$RATIOGROUP[which(newdata$maxratio>10)]<-"POS" # 10
@@ -670,7 +647,7 @@ row.names(ratiofuncttable) <- NULL
 names(ratiofuncttable)[1]<-"Genus"
 ```
 
-```{r fig.align="center",fig.width=20,fig.height=45}
+```{r warning=FALSE, fig.align="center",fig.width=20,fig.height=45}
 nshow<-100
 p1 <- amp_heatmap(data = b_ads_s,
                   c("Temperature","Sample_location"), 
@@ -696,43 +673,47 @@ grid.arrange(p1, p2, nrow = 1, widths = c(0.95, 0.05))
 
 p <- arrangeGrob(p1, p2, nrow=1,widths = c(0.95,0.05))
 grid.draw(p) # interactive device works
+
 # Save figure
-#ggsave(filename = "FigureS3.pdf",plot = p,width = 20,height = 45, useDingbats = FALSE)
+#ggsave(filename = "FigureS4.pdf",plot = p,width = 20,height = 45, useDingbats = FALSE)
 ```
-
-## Figure S4
-Rank abundance curves for the three digester types (mesophilic, thermophilic and THP)
-
-```{r,fig.align="center",fig.height=5,fig.width=5}
-ps1_c<-amp_rabund(b_ads_s,group = "Temperature",plot.type = "curve")+xlim(0,1000)+theme(legend.justification=c(1,0), legend.position=c(1,0))
-ps1_c+geom_vline(xintercept =300,colour="grey", linetype = "longdash")+geom_hline(yintercept = 80,colour="grey", linetype = "longdash")
-#ggsave(filename = "FigureS4.pdf",width = 5,height = 5, useDingbats = FALSE)
-```
-
 
 ## Figure S5
+Rank abundance curves for the three digester types (mesophilic, thermophilic and THP)
+
+```{r warning=FALSE,fig.align="center",fig.height=5,fig.width=5}
+ps1_c<-amp_rabund(b_ads_s,group = "Temperature",plot.type = "curve")+xlim(0,1000)+theme(legend.justification=c(1,0), legend.position=c(1,0))
+ps1_c+geom_vline(xintercept =300,colour="grey", linetype = "longdash")+geom_hline(yintercept = 80,colour="grey", linetype = "longdash")
+
+# Save figure
+#ggsave(filename = "FigureS5.pdf",width = 5,height = 5, useDingbats = FALSE)
+```
+
+
+## Figure S6
 PCA plot of all the samples coloured by sample type
 
-```{r ,fig.align="center",fig.height=7,fig.width=7}
+```{r warning=FALSE ,fig.align="center",fig.height=7,fig.width=7}
 b_sel<- subset_samples(b_df, simple_var3!="empty" & !(SA_ID %in% skiplist) & !(Sample_location=="Herning" & Temperature=="Mesophilic") & (Investigator!="CHJ") & !(SEQ_ID %in% skiplist2) & !(Dataset=="CJH" & Temperature=="THP") & !(Project_name %in% c("DNAextraction_optimisation_from_biogas","VTU_Case_study_-_GasMixCase_Viborg")))
 # Make labels prettier
 sample_data(b_sel)$simple_var3<-gsub(".) ", "", sample_data(b_sel)$simple_var3)
-pS5<-amp_ordinate(b_sel,
+pS6<-amp_ordinate(b_sel,
              plot.color = "simple_var3",
              plot.group.label = "simple_var3",
              plot.group.label.size = 7)+
   theme_cowplot()+
   theme(plot.margin = unit(c(0,0,0,0), "mm"))+
   theme(legend.position="none")
-pS5
-fname<-paste0("FigureS5.pdf")
-#ggsave(filename = fname,width = 7,height = 7, useDingbats = FALSE)
+pS6
+
+# Save the figure
+# fname<-paste0("FigureS6.pdf")
 ```
 
-## Figure S6
+## Figure S7
 Heatmap of the organisms in the primary sludge
 
-```{r, fig.align="center",fig.height=7,fig.width=17}
+```{r warning=FALSE, fig.align="center",fig.height=7,fig.width=17}
 PS<-subset_samples(b_df, simple_var3=="a) Primary sludge")
 
 p_temp<-amp_heatmap(PS,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Sample_location"),color.vector = c("white","red"),plot.na = T)+
@@ -746,23 +727,14 @@ new_labels <- toupper(sub(".*? ", "", original_labels))
 p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_labels)) 
 p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
-#ggsave(filename = "FigureS6.pdf",width = 17,height = 7, useDingbats = FALSE)
+# Save the figure
+#ggsave(filename = "FigureS7.pdf",width = 17,height = 7, useDingbats = FALSE)
 ```
 
-Get stats about the number of samples per plant
-
-```{r}
-mytable<-sample_data(PS)
-summary(factor(mytable$Sample_location))
-
-length(factor(mytable$Sample_location))
-```
-
-
-## Figure S7
+## Figure S8
 Heatmap of organisms in the surplus sludge
 
-```{r fig.align="center",fig.height=7,fig.width=17}
+```{r warning=FALSE, fig.align="center",fig.height=7,fig.width=17}
 AS<-subset_samples(b_df, simple_var3=="b) Surplus sludge")
 
 p_temp<-amp_heatmap(AS,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Sample_location"),color.vector = c("white","red"),plot.na = T)+
@@ -776,22 +748,14 @@ new_labels <- toupper(sub(".*? ", "", original_labels))
 p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_labels)) 
 p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
-#ggsave(filename = "FigureS7.pdf",width = 17,height = 7, useDingbats = FALSE)
+# Save the figure
+#ggsave(filename = "FigureS8.pdf",width = 17,height = 7, useDingbats = FALSE)
 ```
 
-Get stats about the number of samples per plant
-
-```{r}
-mytable<-sample_data(AS)
-summary(factor(mytable$Sample_location))
-
-length(factor(mytable$Sample_location))
-```
-
-## Figure S8
+## Figure S9
 Distributions of digester to influent abundance ratios for for individual plants w. many samples
 
-```{r}
+```{r warning=FALSE}
 plant<-"Viborg"
 plants<-c("Viborg","Fredericia","Aalborg_West","Bjergmarken","Ejby_Moelle")
 ratiodf_sel<-data.frame(RATIO=double(), res_RT.tag=character(), res_RT.Mean=double(), plant=character())
@@ -838,22 +802,23 @@ tempdf<-cbind(mydf,plant)
 tempdf$Frequency<-tempdf$res_RT.Mean/sum(tempdf$res_RT.Mean)
 ratiodf_sel<-rbind(ratiodf_sel,tempdf)
 }
-
 ```
 
-```{r fig.width=10,fig.height=7,fig.align="center"}
+```{r warning=FALSE, fig.width=10,fig.height=7,fig.align="center"}
 ggplot(ratiodf_sel)+
   geom_line(aes(x=RATIO,y=(..density..),weight=Frequency, colour = plant),size = 2, stat="density")+
   ylab(label = "Density\n(weighted by abundance)")+
   scale_x_log10(breaks = c(0.1,1,10,100,1000))+
   theme(legend.title=element_blank(),legend.position = "bottom")
-#ggsave(filename = "SurveyPaper/FigureS8.pdf",width = 10,height = 7, useDingbats = FALSE)
+
+# Save the figure
+#ggsave(filename = "FigureS9.pdf",width = 10,height = 7, useDingbats = FALSE)
 ```
 
-## Figure S9
+## Figure S10
 OTUs within Gelria are different between mesophilic and thermophilic! 
 
-```{r fig.align="center",fig.height=7,fig.width=10}
+```{r warning=FALSE, fig.align="center",fig.height=7,fig.width=10}
 gelria<-subset_taxa(b_ads_s, Genus=="g__Gelria")
 
 p_temp<-amp_heatmap(gelria,tax.aggregate = "OTU",tax.show = 15,tax.add = "Genus",group = c("Temperature","Sample_location"),color.vector = c("white","red"),plot.na = T)+
@@ -868,5 +833,37 @@ new_labels <- toupper(sub(".*? ", "", original_labels))
 p_temp$data$Group.label<-mapvalues(p_temp$data$Group,original_labels,c(new_labels)) 
 p_temp+aes(x=p_temp$data$Group.label)+theme(axis.title.x=element_blank())
 
-#ggsave(filename = "FigureS9.pdf",width = 10,height = 7, useDingbats = FALSE)
+# Save the figure
+#ggsave(filename = "FigureS10.pdf",width = 10,height = 7, useDingbats = FALSE)
 ```
+
+
+## Figure S11
+Timeseries for the reactor in Viborg during the survey
+```{r warning=FALSE, fig.align="center",fig.height=10,fig.width=10}
+b_ads_s_vib<- subset_samples(b_df, Sample_location=="Viborg" & Temperature %in% c("Mesophilic") & !(Project_name %in% c("DNAextraction_optimisation_from_biogas","VTU_Case_study_-_GasMixCase_Viborg")) & !(SA_ID %in% skiplist) & (Investigator!="CHJ") & !(SEQ_ID %in% skiplist2) )
+
+pS11_a<-amp_heatmap(b_ads_s_vib,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Collection_date"),color.vector = c("white","red"),plot.na = T)+
+  #facet_grid(~ Temperature,scales="free_x",space="free")+
+  theme(plot.margin = unit(c(0,0,0,0), "mm"),
+        axis.text.y = element_text(color = "black"),
+        strip.text.x = element_text(color = "black"),
+        axis.text.x = element_text(vjust=0.5,color = "black"),legend.position="none")+xlab("Sample date\n(yyyymmdd)")
+
+b_ads_s_aaw<- subset_samples(b_df, Sample_location=="Aalborg_West" & Temperature %in% c("Thermophilic") & !(Project_name %in% c("DNAextraction_optimisation_from_biogas","VTU_Case_study_-_GasMixCase_Viborg")) & !(SA_ID %in% skiplist) & (Investigator!="CHJ") & !(SEQ_ID %in% skiplist2) )
+
+pS11_b<-amp_heatmap(b_ads_s_aaw,tax.aggregate = "Genus",tax.add = c("Phylum"),tax.empty = "OTU",tax.show = 20,group = c("Collection_date"),color.vector = c("white","red"),plot.na = T)+
+  #facet_grid(~ Temperature,scales="free_x",space="free")+
+  theme(plot.margin = unit(c(0,0,0,0), "mm"),
+        axis.text.y = element_text(color = "black"),
+        strip.text.x = element_text(color = "black"),
+        axis.text.x = element_text(vjust=0.5,color = "black"),legend.position="none")+xlab("Sample date\n(yyyymmdd)")
+
+#
+plot_grid(pS11_a, pS11_b, align='vh',ncol = 1, labels=c('A', 'B'))
+
+# Save the figure
+#ggsave(filename = "FigureS11.pdf",width = 10,height = 10, useDingbats = FALSE)
+```
+
+
