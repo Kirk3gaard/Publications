@@ -13,4 +13,4 @@
   * The raw sequencing data is available at the European Nucleotide Archive with BioProject ID: [PRJEB15624](http://www.ncbi.nlm.nih.gov/bioproject/?term=PRJEB15624).
   * The data processing is described in the [preprint](https://doi.org/10.1101/104620)
   * The ".RData" file is available at [figshare](https://dx.doi.org/10.6084/m9.figshare.4308191)
-  * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et 2017](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2017)
+  * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et al 2017](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2017)
