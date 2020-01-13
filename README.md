@@ -15,9 +15,9 @@
   * The ".RData" file is available at [figshare](https://dx.doi.org/10.6084/m9.figshare.4308191)
   * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et al 2017](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2017)
 
-## [Kirkegaard et al 2019: "TBA" DOI: TBA]()
+## [Kirkegaard et al 2020: "TBA" DOI: TBA]()
 * Data availability
   * The raw sequencing data is available at the European Nucleotide Archive with BioProject ID: [TBA]().
   * The data processing is described in the [paper]()
   * The ".RData" file is available at [figshare]()
-  * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et al 2019](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2019)
+  * RMarkdown files for reproducing the figures are available at Github: [Kirkegaard et al 2020](https://github.com/Kirk3gaard/Publications/tree/master/Kirkegaard2020)
